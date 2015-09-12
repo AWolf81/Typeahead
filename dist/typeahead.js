@@ -113,7 +113,7 @@ angular.module('pdTypeAhead', ['pdMousetrap'])
 			$document[0].getElementById('idSearch').focus(); // auto-focus to input field
 			$compile(element)(scope); // update because of newly added directive
 		},
-		templateUrl:'templates/typeahead.tmpl'
+		templateUrl:'src/components/typeahead/typeahead.tmpl'
 	}
 }]); 
 // service.js
