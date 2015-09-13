@@ -28,6 +28,12 @@ module.exports = function(grunt) {
         //tasks: ['default'],
       },
     },
+    jshint: {
+      options: {
+        jshintrc: true,
+      },
+      all: ['gruntfile.js', 'src/**/*.js', 'test/**/*.js']
+    },
     concat: {
         js: {
             src: [
@@ -74,9 +80,9 @@ module.exports = function(grunt) {
         options: {
           newModule: true,
         },
-        src: 'src/components/typeahead/**/*.tmpl',// 'src/components/typeahead/**/*.tmpl'],
+        src: '**/*.tmpl',// 'src/components/typeahead/**/*.tmpl'],
         dest: 'tmp/<%= pkg.name %>.tpls.js',
-        cwd: 'test/fixtures'
+        cwd: 'src/components/typeahead' // path prefix for src
       },
     }
   });
@@ -102,7 +108,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-angular-templatecache');
 
   // Default task(s).
-  grunt.registerTask('default', 'watch files and start livereload server', ['connect', 'watch']);
+  grunt.registerTask('default', 'watch files and start livereload server', ['jshint', 'connect', 'watch']);
   grunt.registerTask('build', 'build src into dist folder', ['angularTemplateCache', 'concat', 'ngAnnotate', 'uglify']);
 
 };
