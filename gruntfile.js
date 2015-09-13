@@ -8,9 +8,32 @@ module.exports = function(grunt) {
     dirs: {
         output: 'dist', // path to build folder
     },
+
+    connect: {
+      server: {
+        options: {
+          port: 8000,
+          hostname: 'localhost',
+        }
+      }
+    },
+
+    watch: {
+      livereload: {
+        options: {
+          spawn: false,
+          livereload: true,
+        },
+        files: ['*.html', 'src/*.js', 'src/**/*.tmpl', 'src/**/*.html', 'css/**/*.scss', '!lib/dontwatch.js'],
+        //tasks: ['default'],
+      },
+    },
     concat: {
         js: {
-            src: 'src/components/typeahead/*.js',
+            src: [
+              'src/components/typeahead/*.js',
+              '<%=angularTemplateCache.newModule.dest %>'
+            ],
             dest: '<%=dirs.output %>/<%= pkg.name %>.js'
         }
     },
@@ -42,11 +65,33 @@ module.exports = function(grunt) {
                 },
             ],*/
         }
+    },
+    angularTemplateCache: {
+      options: {
+        module: '<%= pkg.name %>.tpls'
+      },
+      newModule: {
+        options: {
+          newModule: true,
+        },
+        src: 'src/components/typeahead/**/*.tmpl',// 'src/components/typeahead/**/*.tmpl'],
+        dest: 'tmp/<%= pkg.name %>.tpls.js',
+        cwd: 'test/fixtures'
+      },
     }
   });
 
   // Load the plugin that provides the "concat" task.
   grunt.loadNpmTasks('grunt-contrib-concat');
+
+  // Load the plugin that provides the "watch" task.
+  grunt.loadNpmTasks('grunt-contrib-watch');
+
+  // Load the plugin that provides the "connect" task.
+  grunt.loadNpmTasks('grunt-contrib-connect');
+
+  // Load the plugin that provides the "jshint" task.
+  grunt.loadNpmTasks('grunt-contrib-jshint');
 
   // Load the plugin that provides the "uglify" task.
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -54,8 +99,10 @@ module.exports = function(grunt) {
   // load the plugin that provides the "ng-annotate" task.
   grunt.loadNpmTasks('grunt-ng-annotate');
 
+  grunt.loadNpmTasks('grunt-angular-templatecache');
+
   // Default task(s).
-  // grunt.registerTask('default', ['uglify']);
-  grunt.registerTask('build', ['concat', 'ngAnnotate', 'uglify']);
+  grunt.registerTask('default', 'watch files and start livereload server', ['connect', 'watch']);
+  grunt.registerTask('build', 'build src into dist folder', ['angularTemplateCache', 'concat', 'ngAnnotate', 'uglify']);
 
 };

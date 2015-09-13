@@ -174,3 +174,8 @@ angular.module('pdTypeAhead')
 
 	}
 }]);
+'use strict';
+
+angular.module('typeahead.tpls', []).
+run(['$templateCache', function($templateCache) {
+}]);
