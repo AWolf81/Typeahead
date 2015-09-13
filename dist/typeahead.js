@@ -178,4 +178,19 @@ angular.module('pdTypeAhead')
 
 angular.module('typeahead.tpls', []).
 run(['$templateCache', function($templateCache) {
+  $templateCache.put('typeahead.tmpl',
+    '<h2 class="text-center">Typeahead Example Using AngularJS Directives</h2>\n' +
+    '<div class="bs-example">\n' +
+    '  \n' +
+    '    <div class="form-group col-sm-10">\n' +
+    '      <label for="Search term" class="form-group">Enter search term</label>\n' +
+    '      <input class="form-control" type="search" id="idSearch" ng-model="sterm" ng-change="filterData(sterm)" placeholder="Enter Search Term">\n' +
+    '      <div ng-if="visible" class="dropdown limitHeight">\n' +
+    '          <a href="#" ng-model="selName" ng-class="{active: data.selected}" ng-click="updateSearchTerm(data)" ng-repeat="data in typeAheadCtrl.results track by $index" class="divider list-group-item">\n' +
+    '           {{data.value}}\n' +
+    '          </a>\n' +
+    '      </div>\n' +
+    '    </div>\n' +
+    '</div>'
+  );
 }]);

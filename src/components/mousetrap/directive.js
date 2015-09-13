@@ -1,37 +1,46 @@
 // directive.js
 // keybinding with mousetrap js
-/* @ngInject */
-angular.module('pdMousetrap', [])
-.directive('pdMousetrap', ['$rootScope', 'pdTypeAheadSelectService', function ($rootScope, pdTypeAheadSelectService) {
-	return {
-		restrict: 'A',
-		link: function (scope, iElement, iAttrs) {
+(function() {
 
-			Mousetrap.bind(['right', 'down'], function() {
-				pdTypeAheadSelectService.moveDown();
-			});
+	'use strict';
 
-			Mousetrap.bind(['left', 'up'], function() {
-				pdTypeAheadSelectService.moveUp();
-			});
+	angular.module('pdMousetrap', [])
+		.directive('pdMousetrap', MousetrapDirective);
 
-			Mousetrap.bind('enter', function() {
-				$rootScope.$broadcast('pd.typeahead:enter');
-				pdTypeAheadSelectService.applySelection();
-			});
+	/* @ngInject */
+	function MousetrapDirective($rootScope, pdTypeAheadSelectService) {
+		var directive = {
+			restrict: 'A',
+			link: MousetrapBinding
+		};
+		return directive;
 
-			Mousetrap.bind('backspace', function() {
-				$rootScope.$broadcast('pd.typeahead:backspace');
-				pdTypeAheadSelectService.applySelection();
-			});
+		//////////////////////
 
-			Mousetrap.bind('escape', function() {
-				$rootScope.$broadcast('pd.typeahead:close');
-			});
+		function MousetrapBinding(scope, iElement, iAttrs) {
 
-			Mousetrap.stopCallback = function () {
-     			return false;
-			}; // required to trigger mousetrap even with focused input elements
+			Mousetrap
+				.bind(['right', 'down'], function() {
+					pdTypeAheadSelectService.moveDown();
+				})
+				.bind(['left', 'up'], function() {
+					pdTypeAheadSelectService.moveUp();
+				})
+				.bind('enter', function() {
+					$rootScope.$broadcast('pd.typeahead:enter');
+					pdTypeAheadSelectService.applySelection();
+				})
+				.bind('backspace', function() {
+					$rootScope.$broadcast('pd.typeahead:backspace');
+					pdTypeAheadSelectService.applySelection();
+				})
+				.bind('escape', function() {
+					$rootScope.$broadcast('pd.typeahead:close');
+				})
+				.stopCallback = function () {
+     				return false; // required to trigger mousetrap even with focused input elements
+			};
 		}
-	};
-}])
+	}
+
+})();
