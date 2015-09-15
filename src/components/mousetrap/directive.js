@@ -11,35 +11,51 @@
 	function MousetrapDirective($rootScope, pdTypeAheadSelectService) {
 		var directive = {
 			restrict: 'A',
-			link: MousetrapBinding
 		};
+
+		activate();
+		
 		return directive;
 
 		//////////////////////
 
-		function MousetrapBinding(scope, iElement, iAttrs) {
+		function activate() {
+			var keyBindings = getMousetrapBindings();
+			angular.forEach(keyBindings, function(binding) {
+				Mousetrap.bind(binding.keys, binding.handler);
+			});
+			Mousetrap.stopCallback = stopCallback;
+		}
+		
+		function stopCallback() {
+			return false; // required to trigger mousetrap even with focused input elements
+		}
 
-			Mousetrap
-				.bind(['right', 'down'], function() {
-					pdTypeAheadSelectService.moveDown();
-				})
-				.bind(['left', 'up'], function() {
-					pdTypeAheadSelectService.moveUp();
-				})
-				.bind('enter', function() {
-					$rootScope.$broadcast('pd.typeahead:enter');
-					pdTypeAheadSelectService.applySelection();
-				})
-				.bind('backspace', function() {
-					$rootScope.$broadcast('pd.typeahead:backspace');
-					pdTypeAheadSelectService.applySelection();
-				})
-				.bind('escape', function() {
-					$rootScope.$broadcast('pd.typeahead:close');
-				})
-				.stopCallback = function () {
-     				return false; // required to trigger mousetrap even with focused input elements
-			};
+		function getMousetrapBindings() {
+			return [
+				{
+					keys: ['right', 'down'],
+					handler: function() { pdTypeAheadSelectService.moveDown(); }
+				}, {
+					keys: ['left', 'up'],
+					handler: function() { pdTypeAheadSelectService.moveUp(); }
+				}, {
+					keys: 'enter',
+					handler: function() {
+						$rootScope.$broadcast('pd.typeahead:enter');
+						pdTypeAheadSelectService.applySelection();
+					}
+				}, {
+					keys: 'backspace', 
+					handler: function() {
+						$rootScope.$broadcast('pd.typeahead:backspace');
+						pdTypeAheadSelectService.applySelection();
+					}
+				}, {
+					keys: 'escape', 
+					handler: function() { $rootScope.$broadcast('pd.typeahead:close'); }
+				}
+			];
 		}
 	}
 
