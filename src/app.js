@@ -1,7 +1,7 @@
-angular.module('pdTypeadhead', ['pdTypeAhead'])
+angular.module('pdTypeadheadDemo', ['pdTypeahead'])
 .value('DATA_SERVICE', 'https://raw.githubusercontent.com/dominictarr/random-name/master/first-names.json')
-.controller('mainCtrl', ['$scope', 'pdTypeAheadService', function($scope,  pdTypeAheadService) {
-  	pdTypeAheadService.getData()
+.controller('mainCtrl', ['$scope', 'pdTypeaheadDataService', function($scope,  pdTypeaheadDataService) {
+  	pdTypeaheadDataService.getData()
         .then(function (httpData) {
             $scope.dataToPopulate = httpData;
         },

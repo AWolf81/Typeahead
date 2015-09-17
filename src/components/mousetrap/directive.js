@@ -4,17 +4,17 @@
 
 	'use strict';
 
-	angular.module('pdMousetrap', [])
+	angular.module('pdMousetrapModule', [])
 		.directive('pdMousetrap', MousetrapDirective);
 
 	/* @ngInject */
-	function MousetrapDirective($rootScope, pdTypeAheadSelectService) {
+	function MousetrapDirective($rootScope, pdTypeaheadSelectService) {
 		var directive = {
 			restrict: 'A',
 		};
 
 		activate();
-		
+
 		return directive;
 
 		//////////////////////
@@ -35,21 +35,21 @@
 			return [
 				{
 					keys: ['right', 'down'],
-					handler: function() { pdTypeAheadSelectService.moveDown(); }
+					handler: function() { pdTypeaheadSelectService.moveDown(); }
 				}, {
 					keys: ['left', 'up'],
-					handler: function() { pdTypeAheadSelectService.moveUp(); }
+					handler: function() { pdTypeaheadSelectService.moveUp(); }
 				}, {
 					keys: 'enter',
 					handler: function() {
 						$rootScope.$broadcast('pd.typeahead:enter');
-						pdTypeAheadSelectService.applySelection();
+						pdTypeaheadSelectService.applySelection();
 					}
 				}, {
 					keys: 'backspace', 
 					handler: function() {
 						$rootScope.$broadcast('pd.typeahead:backspace');
-						pdTypeAheadSelectService.applySelection();
+						pdTypeaheadSelectService.applySelection();
 					}
 				}, {
 					keys: 'escape', 

@@ -24,8 +24,8 @@ module.exports = function(grunt) {
           spawn: false,
           livereload: true,
         },
-        files: ['*.html', 'src/*.js', 'src/**/*.tmpl', 'src/**/*.html', 'css/**/*.scss', '!lib/dontwatch.js'],
-        //tasks: ['default'],
+        files: ['*.html', 'src/**/*.js', 'src/**/*.tmpl', 'src/**/*.html', 'css/**/*.scss', '!lib/dontwatch.js'],
+        tasks: ['jshint', 'build:dev'] //['default'],
       },
     },
     jshint: {
@@ -37,7 +37,11 @@ module.exports = function(grunt) {
     concat: {
         js: {
             src: [
+              'src/common/**/*.js', // common scripts (utils and shared methods)
+              'src/components/typeahead/*.module.js', // modules first
               'src/components/typeahead/*.js',
+
+              'src/components/**/*.js', // load other source files (order doesn't matter)
               '<%=angularTemplateCache.newModule.dest %>'
             ],
             dest: '<%=dirs.output %>/<%= pkg.name %>.js'
@@ -108,7 +112,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-angular-templatecache');
 
   // Default task(s).
-  grunt.registerTask('default', 'watch files and start livereload server', ['jshint', 'connect', 'watch']);
+  grunt.registerTask('default', 'watch files and start livereload server', ['jshint', 'build:dev', 'connect', 'watch']);
+  
+  grunt.registerTask('build:dev', 'build src into dist folder (unminified)', ['angularTemplateCache', 'concat']);
   grunt.registerTask('build', 'build src into dist folder', ['angularTemplateCache', 'concat', 'ngAnnotate', 'uglify']);
 
 };

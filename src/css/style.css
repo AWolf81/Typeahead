@@ -5,6 +5,16 @@
   top:0px;
 }
 
-.active {
+/*.active {
   display: block;
+*/  /*background-color: blue !important;*/
+/*}*/
+
+.dropdown-menu > li > .active,
+.dropdown-menu > li > .active:hover,
+.dropdown-menu > li > .active:focus {
+  color: #fff;
+  text-decoration: none;
+  background-color: #337ab7 !important;
+  outline: 0;
 }
