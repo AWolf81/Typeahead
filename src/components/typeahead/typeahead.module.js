@@ -4,6 +4,7 @@
     
     angular.module('pdTypeahead', [
         'pdMousetrapModule',
+        'utils', //utility methods
         'utils.focus-if',
 
         'pdTypeahead.defaultOptions', 

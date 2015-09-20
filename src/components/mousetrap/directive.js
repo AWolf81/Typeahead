@@ -49,7 +49,6 @@
 					keys: 'backspace', 
 					handler: function() {
 						$rootScope.$broadcast('pd.typeahead:backspace');
-						pdTypeaheadSelectService.applySelection();
 					}
 				}, {
 					keys: 'escape', 

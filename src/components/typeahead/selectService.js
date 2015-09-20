@@ -7,33 +7,33 @@
 
     /* @ngInject */
     function SelectService($rootScope) {
-        var selectedIndex = 0,
-            maxIndex = 0,
-            factory = {
+        var factory = {
+                selectedIndex: 0,
+                maxIndex: 0,
                 setSelected: function(index) {
-                    selectedIndex = index;
+                    this.selectedIndex = index;
                 },
                 setMax: function(max) {
-                    maxIndex = max;
+                    this.maxIndex = max;
                 },
                 getSelected: function() {
-                    return selectedIndex;
+                    return this.selectedIndex;
                 },
                 moveUp: function() {
-                    if ( selectedIndex > 0 ) {
-                        selectedIndex--; 
+                    if ( this.selectedIndex > 0 ) {
+                        this.selectedIndex--; 
                     }
-                    $rootScope.$broadcast('pd.typeahead:updatedIndex', selectedIndex);
+                    $rootScope.$broadcast('pd.typeahead:updatedIndex', this.selectedIndex);
                 },
                 moveDown: function() {
-                    if ( selectedIndex < maxIndex -1 ){
-                        selectedIndex++;
+                    if ( this.selectedIndex < this.maxIndex -1 ){
+                        this.selectedIndex++;
                     }
-                    $rootScope.$broadcast('pd.typeahead:updatedIndex', selectedIndex);
+                    $rootScope.$broadcast('pd.typeahead:updatedIndex', this.selectedIndex);
 
                 },
                 applySelection: function() {
-                    $rootScope.$broadcast('pd.typeahead:applySelection', selectedIndex);
+                    $rootScope.$broadcast('pd.typeahead:applySelection', this.selectedIndex);
                 }
             };
 
