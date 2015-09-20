@@ -1,12 +1,67 @@
 // Gruntfile.js
 
 module.exports = function(grunt) {
+  // load all grunt plugins (every task that start's with 'grunt-')
+  require('load-grunt-tasks')(grunt);
+
+  grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-istanbul-coverage');
 
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     dirs: {
         output: 'dist', // path to build folder
+    },
+    sourceFiles: {
+      js: [
+        'src/common/**/*.js', // common scripts (utils and shared methods)
+        'src/components/typeahead/*.module.js', // modules first
+        'src/components/typeahead/*.js',
+
+        'src/components/**/*.js', // load other source files (order doesn't matter)
+        '<%=angularTemplateCache.newModule.dest %>',
+        '!src/**/*.spec.js'
+      ]
+    },
+    karma: {  
+      unit: {
+        options: {
+          frameworks: ['jasmine'],
+          singleRun: true,
+          browsers: ['PhantomJS'],
+          files: [
+            'bower_components/angular/angular.js',
+            'bower_components/angular-mocks/angular-mocks.js',
+            '<%=sourceFiles.js %>' //'src/**/*.js'
+          ]
+        }
+      }
+    },
+
+    coverage: {
+      default: {
+        options: {
+          thresholds: {
+            'statements': 90,
+            'branches': 90,
+            'lines': 90,
+            'functions': 90
+          },
+          dir: 'coverage',
+          root: 'test'
+        }
+      }
+    },
+
+    clean: {
+      build: {
+        build: ['dist'],
+        tmp: ['tmp'],
+      },
+      test: {
+        coverage: ['coverage']
+      }
     },
 
     connect: {
@@ -36,14 +91,7 @@ module.exports = function(grunt) {
     },
     concat: {
         js: {
-            src: [
-              'src/common/**/*.js', // common scripts (utils and shared methods)
-              'src/components/typeahead/*.module.js', // modules first
-              'src/components/typeahead/*.js',
-
-              'src/components/**/*.js', // load other source files (order doesn't matter)
-              '<%=angularTemplateCache.newModule.dest %>'
-            ],
+            src: '<%=sourceFiles.js %>',
             dest: '<%=dirs.output %>/<%= pkg.name %>.js'
         }
     },
@@ -91,30 +139,16 @@ module.exports = function(grunt) {
     }
   });
 
-  // Load the plugin that provides the "concat" task.
-  grunt.loadNpmTasks('grunt-contrib-concat');
-
-  // Load the plugin that provides the "watch" task.
-  grunt.loadNpmTasks('grunt-contrib-watch');
-
-  // Load the plugin that provides the "connect" task.
-  grunt.loadNpmTasks('grunt-contrib-connect');
-
-  // Load the plugin that provides the "jshint" task.
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-
-  // Load the plugin that provides the "uglify" task.
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  
-  // load the plugin that provides the "ng-annotate" task.
-  grunt.loadNpmTasks('grunt-ng-annotate');
-
-  grunt.loadNpmTasks('grunt-angular-templatecache');
-
   // Default task(s).
   grunt.registerTask('default', 'watch files and start livereload server', ['jshint', 'build:dev', 'connect', 'watch']);
   
   grunt.registerTask('build:dev', 'build src into dist folder (unminified)', ['angularTemplateCache', 'concat']);
-  grunt.registerTask('build', 'build src into dist folder', ['angularTemplateCache', 'concat', 'ngAnnotate', 'uglify']);
+  grunt.registerTask('build', 
+    'build src into dist folder', 
+    ['clean:build', 'angularTemplateCache', 'concat', 'ngAnnotate', 'uglify']
+  );
+  grunt.registerTask('test', 'Run unit tests (single run)', ['jshint', 'karma']);
+  // grunt.registerTask('test:coverage', 'Run test coverage report (Istanbul)', ['coverage']);
+
 
 };
