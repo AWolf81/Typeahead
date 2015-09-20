@@ -1,0 +1,19 @@
+{
+  "name": "Typeahead",
+  "version": "0.0.0",
+  "homepage": "https://github.com/AWolf81/Typeahead",
+  "authors": [
+    "Alexander Wolf <awolf2904@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "angular-mocks": "~1.4.6"
+  }
+}
